@@ -10,3 +10,4 @@ D:\VisualStudio\HarmonyRender\obj\Debug\HarmonyRender.pdb
 D:\VisualStudio\HarmonyRender\bin\Debug\RederElementHD.xml
 D:\VisualStudio\HarmonyRender\obj\Debug\HarmonyRender.csproj.AssemblyReference.cache
 D:\VisualStudio\HarmonyRender\obj\Debug\HarmonyRender.csproj.SuggestedBindingRedirects.cache
+D:\VisualStudio\HarmonyRender\obj\Debug\HarmonyRender.ProgramSettings.resources

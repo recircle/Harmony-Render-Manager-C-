@@ -18,12 +18,16 @@ namespace HarmonyRender
     public partial class Form1 : Form
     {
 
-        private string harmonyPath = "C:\\Program Files (x86)\\Toon Boom Animation\\Toon Boom Harmony 20 Premium\\win64\\bin\\HarmonyPremium.exe";
+        //private string harmonyPath = "C:\\Program Files (x86)\\Toon Boom Animation\\Toon Boom Harmony 20 Premium\\win64\\bin\\HarmonyPremium.exe";
+        private string harmonyPath = Properties.Settings.Default["HarmonyPath"] as string;
 
         private string m_defaultOutputFolder = "";
         private int renderFileNum = 0;
         private bool renderAllFiles = false;
 
+        //stall check
+        private static int countDown = 350;
+        private static System.Threading.Timer threadTimer;
         
 
         public Form1()
@@ -37,7 +41,9 @@ namespace HarmonyRender
             //dataGridView.DefaultCellStyle.ForeColor = Color.LightGray;
             //dataGridView.DefaultCellStyle.BackColor = Color.DarkGray;
 
-            progressBar.BackColor = Color.Black;
+            //progressBar.BackColor = Color.Black;
+
+            
         }
 
         //add folder files button
@@ -65,7 +71,7 @@ namespace HarmonyRender
                     TBfile.Path = System.IO.Path.GetDirectoryName(file) + "\\";
                     TBfile.Frames = int.Parse(getFileFrameNumber(System.IO.Path.GetFullPath(file)));
 
-                    if (TBfile.Name.Contains("Song"))
+                    if (TBfile.Name.Contains("S"))
                         TBfile.ExportName = "S" + TBfile.Name.Substring(TBfile.Name.Length - 2);
                     else
                         TBfile.ExportName = "K" + TBfile.Name.Substring(TBfile.Name.Length - 2);
@@ -103,7 +109,12 @@ namespace HarmonyRender
                 TBfile.Id = dataGridView.Rows.Count;
                 TBfile.Name = System.IO.Path.GetFileNameWithoutExtension(ofd.FileName);
                 TBfile.Path = ofd.FileName.Replace(ofd.SafeFileName, "");
-                TBfile.ExportName = "K" + TBfile.Name.Substring(TBfile.Name.Length - 2);
+
+                if (TBfile.Name.Contains("S"))
+                    TBfile.ExportName = "S" + TBfile.Name.Substring(TBfile.Name.Length - 2);
+                else
+                    TBfile.ExportName = "K" + TBfile.Name.Substring(TBfile.Name.Length - 2);
+
                 TBfile.Frames = int.Parse(getFileFrameNumber(System.IO.Path.GetFullPath(ofd.FileName)));
 
                 if (!string.IsNullOrEmpty(m_defaultOutputFolder))
@@ -119,27 +130,77 @@ namespace HarmonyRender
         // render and remove cell buttons
         private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex == -1)  // ignore header row and any column
+                return;
 
             DataGridViewRow row = dataGridView.Rows[e.RowIndex];
 
             if (dataGridView.Columns[e.ColumnIndex].Name == "Remove")
             {
-                if (MessageBox.Show("Remove " + row.Cells[1].Value.ToString() + "?", "Message", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show("Remove " + row.Cells[2].Value.ToString() + "?", "Message", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
+                    //TODO renew TBfiles - Id
                     tBfilesBindingSource.RemoveCurrent();
+                    resetDataBindSourceID();
                 }
                     
             }
 
             if (dataGridView.Columns[e.ColumnIndex].Name == "Render")
             {
-                if (MessageBox.Show("Render " + row.Cells[1].Value.ToString() + "?", "Message", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show("Render " + row.Cells[2].Value.ToString() + "?", "Message", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     renderAllFiles = false;
 
                     TBfiles file = row.DataBoundItem as TBfiles;
                     parseAndSaveXMLfile(file);
                 }
+            }
+
+            //if (dataGridView.Columns[e.ColumnIndex].Name == "Select")
+            //{
+            //    DataGridViewCheckBoxCell chk = row.Cells[1] as DataGridViewCheckBoxCell;
+
+            //    //if (Convert.ToBoolean(chk.Value) == true) chkInt++;
+            //    //bool check = Convert.ToBoolean(chk.Value);
+
+            //    Console.WriteLine(dataGridView.Columns[e.ColumnIndex].Name);
+            //    Console.WriteLine(chk.EditedFormattedValue);
+
+            //}
+
+        }
+
+        //drag select rows
+        private void dataGridView_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            Console.WriteLine("SELECTED ROWS " + dataGridView.SelectedRows.Count);
+
+            foreach (DataGridViewRow row in dataGridView.SelectedRows)
+            {
+                DataGridViewCheckBoxCell chk = (DataGridViewCheckBoxCell)row.Cells[1];
+                if (Convert.ToBoolean(chk.Value) == true) // || chk.Value == null
+                {
+                    chk.Value = false;
+                    Console.WriteLine("true null " + chk.EditedFormattedValue);
+                }
+                else
+                {
+                    chk.Value = true;
+                    Console.WriteLine("false " + chk.EditedFormattedValue);
+                }
+            }
+        }
+
+        private void resetDataBindSourceID()
+        {
+            for(int i = 0; i < dataGridView.Rows.Count; i++)
+            {
+                DataGridViewRow row = dataGridView.Rows[i];
+                TBfiles file = row.DataBoundItem as TBfiles;
+                file.Id = i;
+
+                Console.WriteLine("ID: " + file.Id);
             }
         }
 
@@ -169,6 +230,31 @@ namespace HarmonyRender
                     renderAllFiles = true;
                     renderAll();
                 }
+            }
+        }
+
+        //render all files button
+        private void buttDelSelected_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Remove selected files?", "Message", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                for (int i = 0; i < dataGridView.Rows.Count; i++)
+                {
+                    dataGridView.Rows.Cast<DataGridViewRow>().Where(row => (bool?)row.Cells[1].Value == true).ToList().ForEach(row =>
+                    {
+                        dataGridView.Rows.Remove(row);
+                    });
+                }
+
+                resetDataBindSourceID();
+            }
+        }
+
+        private void buttRenameSelected_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Rename all files to Story?", "Message", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                 
             }
         }
 
@@ -308,6 +394,22 @@ namespace HarmonyRender
 
                 Console.WriteLine("Done rendering " + file.Id);
             }
+            else
+            {
+                if (renderAllFiles)
+                {
+                    thread1done.Set();
+                    SetProgresBar(progressBar, 0);
+                    SetTextBox(rederingTextOutput, " ");
+
+                    renderFileNum += 1;
+                    renderAll();
+
+                    dataGridView.Rows[file.Id].Cells["Status"].Value = Properties.Resources.X;
+
+                    Console.WriteLine("ERROR - skip to next animation");
+                }
+            }
         }
 
         public bool ExecuteCommandWithFile(string folder, string filePath, TBfiles file)
@@ -341,7 +443,7 @@ namespace HarmonyRender
 
         void RenderingOutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            //Console.WriteLine(e.Data);
+            //Console.WriteLine("ERROR? " + e.Data);
         }
 
         void RenderingErrorDataReceived(object sender, DataReceivedEventArgs e)
@@ -351,7 +453,7 @@ namespace HarmonyRender
                 if (e.Data.Contains("Rendered frame "))
                 {
                     var num = int.Parse(e.Data.Substring(e.Data.LastIndexOf(' ') + 1));
-                    Console.WriteLine(num);
+                    Console.WriteLine("Rendered frame " + num);
 
                     //SetText(rederingTextOutput, "Rendering frame " + num);
                     SetProgresBar(progressBar, num);
@@ -382,6 +484,13 @@ namespace HarmonyRender
                 if(max > 0)
                     progressBar.Maximum = max;
             }
+            if (threadTimer != null)
+            {
+                threadTimer.Dispose();
+                countDown = 350;
+            }
+
+            threadTimer = new System.Threading.Timer(new TimerCallback(TickTimer), null, 0, 1000);
         }
 
         public void SetTextBox(Control controlToChange, string value)
@@ -395,6 +504,30 @@ namespace HarmonyRender
             {
                 rederingTextOutput.Text = value;
             }
+        }
+
+        private void TickTimer(object state)
+        {
+            --countDown;
+
+            if (countDown == 0)
+            {
+                countDown = 350;
+                threadTimer.Dispose();
+                //Environment.Exit(0); //exit program
+
+                if(renderAllFiles)
+                {
+                    renderFileNum += 1;
+                    renderAll();
+
+                    Console.Write("RESTART RENDERING!!!!!!!!!!!! ");
+                }
+            }
+
+            //Console.Write("Tick! " + countDown + " thread ");
+            //Console.WriteLine(Thread.CurrentThread.ManagedThreadId.ToString());
+            //Thread.Sleep(500);
         }
 
         //DRAG&DROP
@@ -420,7 +553,7 @@ namespace HarmonyRender
                     TBfile.Path = System.IO.Path.GetDirectoryName(file) + "\\";
                     TBfile.Frames = int.Parse(getFileFrameNumber(System.IO.Path.GetFullPath(file)));
 
-                    if (TBfile.Name.Contains("Song"))
+                    if (TBfile.Name.Contains("S"))
                         TBfile.ExportName = "S" + TBfile.Name.Substring(TBfile.Name.Length - 2);
                     else
                         TBfile.ExportName = "K" + TBfile.Name.Substring(TBfile.Name.Length - 2);
@@ -441,7 +574,7 @@ namespace HarmonyRender
                 TBfile.Path = System.IO.Path.GetDirectoryName(path) + "\\";
                 TBfile.Frames = int.Parse(getFileFrameNumber(System.IO.Path.GetFullPath(path)));
 
-                if (TBfile.Name.Contains("Song"))
+                if (TBfile.Name.Contains("S"))
                     TBfile.ExportName = "S" + TBfile.Name.Substring(TBfile.Name.Length - 2);
                 else
                     TBfile.ExportName = "K" + TBfile.Name.Substring(TBfile.Name.Length - 2);
@@ -476,5 +609,35 @@ namespace HarmonyRender
         {
             e.Effect = DragDropEffects.All;
         }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //start settings form
+
+            ProgramSettings ps = new ProgramSettings();
+            ps.ShowDialog();
+        }
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void renderListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //start video export form
+        }
+
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //start help form
+        }
+
+        private void fileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        
     }
 }

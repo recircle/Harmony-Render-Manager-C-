@@ -31,12 +31,20 @@ namespace HarmonyRender
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.defaultOutputFolder = new System.Windows.Forms.TextBox();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Select = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Frames = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Render = new System.Windows.Forms.DataGridViewImageColumn();
+            this.Remove = new System.Windows.Forms.DataGridViewImageColumn();
+            this.Status = new System.Windows.Forms.DataGridViewImageColumn();
             this.exportPathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.exportNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.framesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -58,17 +66,21 @@ namespace HarmonyRender
             this.buttAddDir = new System.Windows.Forms.Button();
             this.buttAddFile = new System.Windows.Forms.Button();
             this.buttRenderAll = new System.Windows.Forms.Button();
-            this.tBfilesBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PanelForBar = new System.Windows.Forms.Panel();
+            this.buttDelSelected = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renderListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nameDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.exportNameDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.exportPathDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Frames = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Render = new System.Windows.Forms.DataGridViewImageColumn();
-            this.Remove = new System.Windows.Forms.DataGridViewImageColumn();
-            this.Status = new System.Windows.Forms.DataGridViewImageColumn();
+            this.tBfilesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.PanelForBar.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tBfilesBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -78,9 +90,11 @@ namespace HarmonyRender
             this.defaultOutputFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.defaultOutputFolder.Location = new System.Drawing.Point(138, 20);
+            this.defaultOutputFolder.Location = new System.Drawing.Point(138, 41);
+            this.defaultOutputFolder.MaximumSize = new System.Drawing.Size(290, 20);
+            this.defaultOutputFolder.MinimumSize = new System.Drawing.Size(290, 20);
             this.defaultOutputFolder.Name = "defaultOutputFolder";
-            this.defaultOutputFolder.Size = new System.Drawing.Size(289, 20);
+            this.defaultOutputFolder.Size = new System.Drawing.Size(290, 20);
             this.defaultOutputFolder.TabIndex = 1;
             this.defaultOutputFolder.Text = "Set default export dir";
             this.defaultOutputFolder.DragDrop += new System.Windows.Forms.DragEventHandler(this.defaultOutputFolder_DragDrop);
@@ -91,6 +105,9 @@ namespace HarmonyRender
             this.dataGridView.AllowDrop = true;
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToOrderColumns = true;
+            this.dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView.AutoGenerateColumns = false;
             this.dataGridView.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.dataGridView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
@@ -106,6 +123,7 @@ namespace HarmonyRender
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Id,
+            this.Select,
             this.nameDataGridViewTextBoxColumn2,
             this.exportNameDataGridViewTextBoxColumn2,
             this.exportPathDataGridViewTextBoxColumn2,
@@ -115,35 +133,98 @@ namespace HarmonyRender
             this.Remove,
             this.Status});
             this.dataGridView.DataSource = this.tBfilesBindingSource;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView.DefaultCellStyle = dataGridViewCellStyle3;
-            this.dataGridView.EnableHeadersVisualStyles = false;
-            this.dataGridView.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.dataGridView.Location = new System.Drawing.Point(15, 60);
-            this.dataGridView.Name = "dataGridView";
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView.DefaultCellStyle = dataGridViewCellStyle4;
+            this.dataGridView.EnableHeadersVisualStyles = false;
+            this.dataGridView.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.dataGridView.Location = new System.Drawing.Point(15, 79);
+            this.dataGridView.Name = "dataGridView";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridView.RowHeadersVisible = false;
             this.dataGridView.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.dataGridView.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Gray;
             this.dataGridView.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.dataGridView.Size = new System.Drawing.Size(1124, 783);
+            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView.Size = new System.Drawing.Size(1124, 764);
             this.dataGridView.TabIndex = 1;
             this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
+            this.dataGridView.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_CellMouseUp);
             this.dataGridView.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGridView_DragDrop);
             this.dataGridView.DragEnter += new System.Windows.Forms.DragEventHandler(this.dataGridView_DragEnter);
+            // 
+            // Id
+            // 
+            this.Id.DataPropertyName = "Id";
+            this.Id.HeaderText = "Id";
+            this.Id.Name = "Id";
+            this.Id.Visible = false;
+            // 
+            // Select
+            // 
+            this.Select.DataPropertyName = "Selected";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Gray;
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.NullValue = false;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.Select.DefaultCellStyle = dataGridViewCellStyle2;
+            this.Select.FillWeight = 30F;
+            this.Select.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Select.HeaderText = "Select";
+            this.Select.Name = "Select";
+            this.Select.Width = 30;
+            // 
+            // Frames
+            // 
+            this.Frames.DataPropertyName = "Frames";
+            this.Frames.HeaderText = "Frames";
+            this.Frames.Name = "Frames";
+            this.Frames.Width = 40;
+            // 
+            // Path
+            // 
+            this.Path.DataPropertyName = "Path";
+            this.Path.HeaderText = "Path";
+            this.Path.Name = "Path";
+            this.Path.Visible = false;
+            // 
+            // Render
+            // 
+            this.Render.HeaderText = "Render";
+            this.Render.Image = global::HarmonyRender.Properties.Resources.RENDER_FILE;
+            this.Render.Name = "Render";
+            this.Render.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Render.ToolTipText = "Render this file";
+            this.Render.Width = 60;
+            // 
+            // Remove
+            // 
+            this.Remove.HeaderText = "Remove";
+            this.Remove.Image = global::HarmonyRender.Properties.Resources.X;
+            this.Remove.Name = "Remove";
+            this.Remove.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Remove.ToolTipText = "Remove this file";
+            this.Remove.Width = 60;
+            // 
+            // Status
+            // 
+            this.Status.HeaderText = "Status";
+            this.Status.Image = global::HarmonyRender.Properties.Resources.STATUS_EMPTY;
+            this.Status.Name = "Status";
+            this.Status.Width = 60;
             // 
             // exportPathDataGridViewTextBoxColumn
             // 
@@ -221,7 +302,7 @@ namespace HarmonyRender
             // 
             this.buttBrowse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttBrowse.ForeColor = System.Drawing.Color.Silver;
-            this.buttBrowse.Location = new System.Drawing.Point(429, 18);
+            this.buttBrowse.Location = new System.Drawing.Point(429, 39);
             this.buttBrowse.Name = "buttBrowse";
             this.buttBrowse.Size = new System.Drawing.Size(85, 23);
             this.buttBrowse.TabIndex = 7;
@@ -237,19 +318,24 @@ namespace HarmonyRender
             this.rederingTextOutput.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.rederingTextOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.rederingTextOutput.ForeColor = System.Drawing.Color.DeepSkyBlue;
-            this.rederingTextOutput.Location = new System.Drawing.Point(539, 21);
+            this.rederingTextOutput.Location = new System.Drawing.Point(535, 41);
             this.rederingTextOutput.Name = "rederingTextOutput";
             this.rederingTextOutput.Size = new System.Drawing.Size(142, 13);
             this.rederingTextOutput.TabIndex = 8;
             // 
             // progressBar
             // 
-            this.progressBar.BackColor = System.Drawing.Color.Black;
+            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.progressBar.ForeColor = System.Drawing.Color.DeepSkyBlue;
-            this.progressBar.Location = new System.Drawing.Point(539, 37);
+            this.progressBar.Location = new System.Drawing.Point(-1, -1);
             this.progressBar.Margin = new System.Windows.Forms.Padding(0);
+            this.progressBar.MaximumSize = new System.Drawing.Size(602, 8);
+            this.progressBar.MinimumSize = new System.Drawing.Size(602, 8);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(600, 5);
+            this.progressBar.Size = new System.Drawing.Size(602, 8);
             this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar.TabIndex = 9;
             // 
@@ -286,7 +372,7 @@ namespace HarmonyRender
             this.buttAddDir.FlatAppearance.BorderSize = 0;
             this.buttAddDir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttAddDir.Image = global::HarmonyRender.Properties.Resources.ADD_FOLDER;
-            this.buttAddDir.Location = new System.Drawing.Point(55, 14);
+            this.buttAddDir.Location = new System.Drawing.Point(55, 35);
             this.buttAddDir.Margin = new System.Windows.Forms.Padding(0);
             this.buttAddDir.MaximumSize = new System.Drawing.Size(30, 30);
             this.buttAddDir.Name = "buttAddDir";
@@ -301,7 +387,7 @@ namespace HarmonyRender
             this.buttAddFile.FlatAppearance.BorderSize = 0;
             this.buttAddFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttAddFile.Image = global::HarmonyRender.Properties.Resources.ADD_FILE;
-            this.buttAddFile.Location = new System.Drawing.Point(15, 14);
+            this.buttAddFile.Location = new System.Drawing.Point(15, 35);
             this.buttAddFile.Margin = new System.Windows.Forms.Padding(0);
             this.buttAddFile.Name = "buttAddFile";
             this.buttAddFile.Size = new System.Drawing.Size(30, 30);
@@ -314,7 +400,7 @@ namespace HarmonyRender
             this.buttRenderAll.FlatAppearance.BorderSize = 0;
             this.buttRenderAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttRenderAll.Image = global::HarmonyRender.Properties.Resources.RENDER_ALL;
-            this.buttRenderAll.Location = new System.Drawing.Point(95, 14);
+            this.buttRenderAll.Location = new System.Drawing.Point(95, 35);
             this.buttRenderAll.Margin = new System.Windows.Forms.Padding(0);
             this.buttRenderAll.Name = "buttRenderAll";
             this.buttRenderAll.Size = new System.Drawing.Size(30, 30);
@@ -322,25 +408,95 @@ namespace HarmonyRender
             this.buttRenderAll.UseVisualStyleBackColor = true;
             this.buttRenderAll.Click += new System.EventHandler(this.renderAll_Click);
             // 
-            // tBfilesBindingSource
+            // PanelForBar
             // 
-            this.tBfilesBindingSource.DataSource = typeof(HarmonyRender.TBfiles);
+            this.PanelForBar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.PanelForBar.Controls.Add(this.progressBar);
+            this.PanelForBar.Location = new System.Drawing.Point(535, 55);
+            this.PanelForBar.MaximumSize = new System.Drawing.Size(600, 6);
+            this.PanelForBar.MinimumSize = new System.Drawing.Size(600, 6);
+            this.PanelForBar.Name = "PanelForBar";
+            this.PanelForBar.Size = new System.Drawing.Size(600, 6);
+            this.PanelForBar.TabIndex = 10;
             // 
-            // Id
+            // buttDelSelected
             // 
-            this.Id.DataPropertyName = "Id";
-            this.Id.HeaderText = "Id";
-            this.Id.Name = "Id";
-            this.Id.Visible = false;
+            this.buttDelSelected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttDelSelected.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.buttDelSelected.FlatAppearance.BorderSize = 0;
+            this.buttDelSelected.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttDelSelected.Image = global::HarmonyRender.Properties.Resources.ADD_FILE;
+            this.buttDelSelected.Location = new System.Drawing.Point(15, 857);
+            this.buttDelSelected.Margin = new System.Windows.Forms.Padding(0);
+            this.buttDelSelected.MaximumSize = new System.Drawing.Size(30, 30);
+            this.buttDelSelected.MinimumSize = new System.Drawing.Size(30, 30);
+            this.buttDelSelected.Name = "buttDelSelected";
+            this.buttDelSelected.Size = new System.Drawing.Size(30, 30);
+            this.buttDelSelected.TabIndex = 11;
+            this.buttDelSelected.UseVisualStyleBackColor = true;
+            this.buttDelSelected.Click += new System.EventHandler(this.buttDelSelected_Click);
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.exportToolStripMenuItem,
+            this.helpToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1161, 24);
+            this.menuStrip1.TabIndex = 0;
+            this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.settingsToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.renderListToolStripMenuItem});
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
+            this.exportToolStripMenuItem.Text = "Export";
+            // 
+            // renderListToolStripMenuItem
+            // 
+            this.renderListToolStripMenuItem.Name = "renderListToolStripMenuItem";
+            this.renderListToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.renderListToolStripMenuItem.Text = "Render list";
+            this.renderListToolStripMenuItem.Click += new System.EventHandler(this.renderListToolStripMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
             // 
             // nameDataGridViewTextBoxColumn2
             // 
             this.nameDataGridViewTextBoxColumn2.DataPropertyName = "Name";
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Gray;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.nameDataGridViewTextBoxColumn2.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Gray;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.nameDataGridViewTextBoxColumn2.DefaultCellStyle = dataGridViewCellStyle3;
             this.nameDataGridViewTextBoxColumn2.HeaderText = "Name";
             this.nameDataGridViewTextBoxColumn2.Name = "nameDataGridViewTextBoxColumn2";
             this.nameDataGridViewTextBoxColumn2.Width = 200;
@@ -360,44 +516,9 @@ namespace HarmonyRender
             this.exportPathDataGridViewTextBoxColumn2.Name = "exportPathDataGridViewTextBoxColumn2";
             this.exportPathDataGridViewTextBoxColumn2.Width = 450;
             // 
-            // Frames
+            // tBfilesBindingSource
             // 
-            this.Frames.DataPropertyName = "Frames";
-            this.Frames.HeaderText = "Frames";
-            this.Frames.Name = "Frames";
-            this.Frames.Width = 70;
-            // 
-            // Path
-            // 
-            this.Path.DataPropertyName = "Path";
-            this.Path.HeaderText = "Path";
-            this.Path.Name = "Path";
-            this.Path.Visible = false;
-            // 
-            // Render
-            // 
-            this.Render.HeaderText = "Render";
-            this.Render.Image = global::HarmonyRender.Properties.Resources.RENDER_FILE;
-            this.Render.Name = "Render";
-            this.Render.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Render.ToolTipText = "Render this file";
-            this.Render.Width = 60;
-            // 
-            // Remove
-            // 
-            this.Remove.HeaderText = "Remove";
-            this.Remove.Image = global::HarmonyRender.Properties.Resources.X;
-            this.Remove.Name = "Remove";
-            this.Remove.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Remove.ToolTipText = "Remove this file";
-            this.Remove.Width = 60;
-            // 
-            // Status
-            // 
-            this.Status.HeaderText = "Status";
-            this.Status.Image = global::HarmonyRender.Properties.Resources.STATUS_EMPTY;
-            this.Status.Name = "Status";
-            this.Status.Width = 60;
+            this.tBfilesBindingSource.DataSource = typeof(HarmonyRender.TBfiles);
             // 
             // Form1
             // 
@@ -405,7 +526,8 @@ namespace HarmonyRender
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(1161, 911);
-            this.Controls.Add(this.progressBar);
+            this.Controls.Add(this.buttDelSelected);
+            this.Controls.Add(this.PanelForBar);
             this.Controls.Add(this.rederingTextOutput);
             this.Controls.Add(this.buttBrowse);
             this.Controls.Add(this.buttAddDir);
@@ -413,12 +535,17 @@ namespace HarmonyRender
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.defaultOutputFolder);
             this.Controls.Add(this.buttRenderAll);
+            this.Controls.Add(this.menuStrip1);
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "HarmonyRender";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.PanelForBar.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tBfilesBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -450,7 +577,16 @@ namespace HarmonyRender
         private System.Windows.Forms.DataGridViewImageColumn dataGridViewImageColumn2;
         private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.DataGridViewImageColumn dataGridViewImageColumn3;
+        private System.Windows.Forms.Panel PanelForBar;
+        private System.Windows.Forms.Button buttDelSelected;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem renderListToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn Id;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Select;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn exportNameDataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn exportPathDataGridViewTextBoxColumn2;
